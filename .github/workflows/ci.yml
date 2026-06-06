@@ -1,0 +1,46 @@
+name: VacaMake CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  validate-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'server/package.json'
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm ci || npm install
+      - name: Run server build
+        run: |
+          cd server
+          npm run build --if-present
+
+  validate-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'client/package.json'
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm ci || npm install
+      - name: Run client build
+        run: |
+          cd client
+          npm run build

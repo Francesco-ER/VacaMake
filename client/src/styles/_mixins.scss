@@ -1,0 +1,14 @@
+@mixin glass-panel($bg-opacity: 0.45, $blur: 16px, $border-color: rgba(255, 255, 255, 0.08)) {
+  background: rgba(15, 23, 42, $bg-opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border-color;
+}
+
+@mixin hide-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
