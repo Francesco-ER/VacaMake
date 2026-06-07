@@ -48,6 +48,7 @@ export default function SessionPage() {
   // Input states
   const [itemDesc, setItemDesc] = useState('');
   const [itemCost, setItemCost] = useState('');
+  const [itemQty, setItemQty] = useState('1');
   
   // Settings edit modal / form states
   const [showSettings, setShowSettings] = useState(false);
@@ -105,9 +106,15 @@ export default function SessionPage() {
 
     try {
       const cents = new Decimal(itemCost).mul(100).toDecimalPlaces(0).toNumber();
-      addItem(itemDesc, cents);
+      const qty = Math.max(1, parseInt(itemQty) || 1);
+      
+      for (let i = 0; i < qty; i++) {
+        addItem(itemDesc, cents);
+      }
+      
       setItemDesc('');
       setItemCost('');
+      setItemQty('1');
     } catch {
       alert('Monto inválido');
     }
@@ -452,16 +459,28 @@ export default function SessionPage() {
                     onChange={(e) => setItemDesc(e.target.value)}
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 text-sm focus:outline-none focus:border-orange-500 focus:bg-white"
                   />
-                  <div className="relative w-28">
-                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm">$</span>
+                  <div className="relative w-24">
+                    <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-400 text-sm">$</span>
                     <input
                       type="number"
                       step="0.01"
                       required
-                      placeholder="0.00"
+                      placeholder="Precio"
                       value={itemCost}
                       onChange={(e) => setItemCost(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-3 text-slate-900 text-sm focus:outline-none focus:border-orange-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-6 pr-2.5 text-slate-900 text-sm focus:outline-none focus:border-orange-500 focus:bg-white"
+                    />
+                  </div>
+                  <div className="relative w-16">
+                    <input
+                      type="number"
+                      min="1"
+                      required
+                      placeholder="Cant."
+                      title="Cantidad"
+                      value={itemQty}
+                      onChange={(e) => setItemQty(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-1 text-slate-900 text-sm focus:outline-none focus:border-orange-500 focus:bg-white text-center font-semibold"
                     />
                   </div>
                   <button
@@ -534,7 +553,7 @@ export default function SessionPage() {
                                   : 'bg-slate-100 text-slate-600 border border-slate-200/50'
                               }`}
                             >
-                              @{part.user.username} {cl.splitWeight > 1 ? `(x{cl.splitWeight})` : ''}
+                              @{part.user.username} {cl.splitWeight > 1 ? `(x${cl.splitWeight})` : ''}
                             </span>
                           );
                         })}
@@ -677,7 +696,7 @@ export default function SessionPage() {
             {/* Settle actions */}
             <div className={`${styles.panelGlow} rounded-3xl p-5 space-y-4`}>
               <h3 className="text-sm font-bold text-slate-900">Mi Estado de Pago</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div>
                 <button
                   onClick={() => updateStatus(currentParticipant.status === 'READY' ? 'JOINED' : 'READY')}
                   className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all border ${
@@ -687,17 +706,6 @@ export default function SessionPage() {
                   }`}
                 >
                   {currentParticipant.status === 'READY' ? '✓ Estoy Listo' : 'Marcar como Listo'}
-                </button>
-
-                <button
-                  onClick={() => updateStatus(currentParticipant.status === 'PAID' ? 'JOINED' : 'PAID')}
-                  className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all border ${
-                    currentParticipant.status === 'PAID'
-                      ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-55'
-                  }`}
-                >
-                  {currentParticipant.status === 'PAID' ? '✓ Ya pagué' : 'Marcar como Pagado'}
                 </button>
               </div>
 
