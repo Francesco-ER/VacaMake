@@ -817,6 +817,13 @@ export default function SessionPage() {
                 </div>
               </div>
             </div>
+
+            {/* Disclaimer */}
+            <div className="bg-slate-100 border border-slate-200/60 rounded-2xl p-3.5 text-center">
+              <p className="text-[10px] text-slate-500 leading-relaxed font-medium">
+                ⚠️ <strong>Nota de referencia:</strong> Este cálculo es únicamente de carácter informativo y organizativo. El monto final cobrado siempre debe ser confirmado y validado directamente con el establecimiento/local.
+              </p>
+            </div>
           </div>
         )}
       </main>
